@@ -1,5 +1,5 @@
 {
-    "programmer": "Arduino as ISP",
+    "programmer": "AVR ISP",
     "board": "arduino:avr:uno",
     "port": "/dev/tty.usbserial-01E0500E",
     "sketch": "plant_light.ino"
