@@ -5,6 +5,7 @@
 #include <SD.h> //Library for SD card
 
 File data;
+
  
 #define SD_CARD_PIN 10 //Change for the PIN that the CS output from SD card module is connected to
 
