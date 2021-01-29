@@ -9,7 +9,7 @@ File data;
  
 #define SD_CARD_PIN 10 //Change for the PIN that the CS output from SD card module is connected to
 
-LiquidCrystal_I2C lcd(0x27,2,1,0,4,5,6,7,3, POSITIVE); // Initialize LCD Display at address 0x27 
+LiquidCrystal_I2C lcd(0x27,20,4); // Initialize LCD Display at address 0x27 
 
 void setup()
 {
