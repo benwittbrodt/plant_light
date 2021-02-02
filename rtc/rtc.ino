@@ -2,6 +2,10 @@
 #include <Wire.h>
 #include "RTClib.h"
 #include <LiquidCrystal_I2C.h>
+#include <SPI.h>
+#include <SD.h>
+
+File datafile;
 
 RTC_DS1307 rtc;
 
@@ -12,18 +16,15 @@ LiquidCrystal_I2C lcd(0x27, 16, 2);
 const byte BLUE_SENSOR = A4;
 const byte GREEN_SENSOR = A5;
 
+const int SD_CARD_PIN = 10;
+
 void setup()
 {
-  Serial.begin(57600);
+  Serial.begin(9600);
   //Likely will remove later but for troubleshooting we are initiating the LCD screen, activating the backlight, and then setting it to HIGH
   lcd.init();
   lcd.backlight();
   lcd.setBacklight(HIGH);
-
-#ifndef ESP8266
-  while (!Serial)
-    ; // wait for serial port to connect. Needed for native USB
-#endif
 
   //Checks for the RTC module - if none are available it will abort
   if (!rtc.begin())
@@ -40,21 +41,29 @@ void setup()
     // following line sets the RTC to the date & time this sketch was compiled
     rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
   }
+  
+  Serial.print("SD Card init...");
+  //test if wiring is correct
+  if (!SD.begin(SD_CARD_PIN)) {
+    Serial.println("init failed..");
+    while (1);
+  }
+  Serial.println("init ok");
 }
 
 void loop()
 {
   //Handling all of the time information//////////////
-
+  String the_time;
   DateTime time = rtc.now();
 
   //Formatting the time output as timestamp - then printing at the top of the LCD for testing
   Serial.println(time.timestamp(DateTime::TIMESTAMP_FULL));
   Serial.println();
-
+  the_time = time.timestamp(DateTime::TIMESTAMP_FULL);
   lcd.home();
   lcd.print(time.timestamp(DateTime::TIMESTAMP_TIME));
-
+  
   ///////////////////////////////////////////////////////
 
   // Reading the info from analog sensors
@@ -69,6 +78,27 @@ void loop()
   lcd.print(greenValue);
 
   //////////////////////////////////////////////////////
+
+  //Handling getting the data in to SD card
+
+  datafile = SD.open("20210202.txt", FILE_WRITE);
+ 
+  if (datafile) {
+    datafile.print(the_time);
+    datafile.print(",");
+    datafile.print(String(blueValue));
+    datafile.print(",");
+    datafile.print(String(greenValue));
+    datafile.println();
+
+    datafile.close();
+  } 
+  else {
+    //if you cannot open the data file it will give an error in serial monitor
+    Serial.println("Cannot open file");
+  }
+  /////////////////////////////////////////////////////
+
 
   //1 second delay and clear the LCD so numbers don't overlap - if we don't clear the LCD the "old" data will stay when we enter the loop again
   delay(1000);

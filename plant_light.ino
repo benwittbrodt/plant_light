@@ -57,7 +57,7 @@ void loop()
     lcd.print(secondLevel);
 
   
-  data = SD.open("data.txt", FILE_WRITE); //open file
+  data = SD.open("dataloggggg.txt", FILE_WRITE); //open file
   if (data) {
     data.print(first);  //print the data to file
     data.print(",");    //Manually creating csv logic - to be fixed later 
