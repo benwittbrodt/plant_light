@@ -41,7 +41,7 @@ void setup()
     // following line sets the RTC to the date & time this sketch was compiled
     rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
   }
-  
+  rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
   Serial.print("SD Card init...");
   //test if wiring is correct
   if (!SD.begin(SD_CARD_PIN)) {
@@ -49,6 +49,16 @@ void setup()
     while (1);
   }
   Serial.println("init ok");
+  datafile = SD.open("20210202.txt", FILE_WRITE);
+    datafile.print("Time");
+    datafile.print(",");
+    datafile.print("blue value");
+    datafile.print(",");
+    datafile.print("green value");
+    datafile.println();
+  if (datafile) {
+    Serial.println("headers written");
+  }
 }
 
 void loop()
