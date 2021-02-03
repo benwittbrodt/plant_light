@@ -18,6 +18,9 @@ const byte GREEN_SENSOR = A5;
 
 const int SD_CARD_PIN = 10;
 
+//Interval for data pings - default is 30 seconds
+const int dataInterval = 30000;
+
 void setup()
 {
   Serial.begin(9600);
@@ -115,7 +118,7 @@ void loop()
   }
   /////////////////////////////////////////////////////
 
-  //1 second delay and clear the LCD so numbers don't overlap - if we don't clear the LCD the "old" data will stay when we enter the loop again
-  delay(1000);
+  //data delay second delay and clear the LCD so numbers don't overlap - if we don't clear the LCD the "old" data will stay when we enter the loop again
+  delay(dataInterval);
   lcd.clear();
 }
